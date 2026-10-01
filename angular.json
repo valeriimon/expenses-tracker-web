@@ -32,7 +32,8 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/_headers"
             ],
             "styles": [
               "src/global.scss",

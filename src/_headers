@@ -1,0 +1,7 @@
+# Response headers for Cloudflare Pages, which reads this file from the build.
+#
+# A cached sw.js is a deploy that nobody notices: the browser would keep
+# checking a stale copy for updates. Pages already revalidates by default;
+# this states it here so it does not depend on that default.
+/sw.js
+  Cache-Control: no-cache
