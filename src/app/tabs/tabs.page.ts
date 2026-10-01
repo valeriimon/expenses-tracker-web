@@ -10,6 +10,8 @@ import {
   walletOutline,
 } from 'ionicons/icons';
 
+import { TAB_BAR_ID } from '../core/state/update.service';
+
 /**
  * The app's three top-level destinations. Each tab carries a label as well as
  * an icon, and the active one is told apart by its filled icon as well as by
@@ -22,6 +24,9 @@ import {
   imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
 })
 export class TabsPage {
+  /** Lets a notice anchor itself above the tab bar rather than over it. */
+  protected readonly tabBarId = TAB_BAR_ID;
+
   protected readonly tabs = [
     { tab: 'expenses', label: 'Expenses', icon: 'wallet' },
     { tab: 'insights', label: 'Insights', icon: 'stats-chart' },

@@ -72,3 +72,6 @@ Thumbs.db
 # Playwright
 /test-results
 /playwright-report
+
+# Local HTTPS certificate and its private key (npm run cert)
+/certs

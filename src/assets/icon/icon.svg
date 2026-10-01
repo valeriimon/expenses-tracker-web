@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- A ledger page closing on its total: three entries, a heavier rule, and
+       the sum beneath it. The ground is the accent; the marks are the paper. -->
+  <rect width="512" height="512" fill="#00695c"/>
+  <g fill="#fcfcfa">
+    <rect x="156" y="164" width="200" height="16" rx="8" opacity="0.7"/>
+    <rect x="156" y="212" width="200" height="16" rx="8" opacity="0.7"/>
+    <rect x="156" y="260" width="200" height="16" rx="8" opacity="0.7"/>
+    <rect x="136" y="304" width="240" height="12"/>
+    <rect x="236" y="340" width="120" height="28" rx="6"/>
+  </g>
+</svg>

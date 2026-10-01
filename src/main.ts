@@ -1,6 +1,4 @@
-import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideServiceWorker } from '@angular/service-worker';
 import { RouteReuseStrategy, provideRouter, withComponentInputBinding, withPreloading, PreloadAllModules } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular';
 
@@ -18,12 +16,6 @@ bootstrapApplication(AppComponent, {
     // the device the browser happens to be running on.
     provideIonicAngular({ mode: 'md', animated: !reduceMotion }),
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
-    // Caches the app itself, so it opens with no network at all. The data
-    // never needed one: it lives in IndexedDB.
-    provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000',
-    }),
   ],
 }).then(() => {
   // Asks the browser not to evict this site's storage under pressure. It may

@@ -48,6 +48,16 @@ test.describe('shell', () => {
   });
 });
 
+test.describe('development build', () => {
+  test('registers no service worker and says the app is not kept offline', async ({ page }) => {
+    await expect(page.getByText('Nothing recorded this week.')).toBeVisible();
+    expect(await page.evaluate(() => navigator.serviceWorker.getRegistrations())).toHaveLength(0);
+
+    await page.getByRole('button', { name: 'Settings' }).click();
+    await expect(page.getByText('Not available offline in this browser')).toBeVisible();
+  });
+});
+
 test.describe('expenses', () => {
   test('refuses an incomplete entry and keeps what was typed', async ({ page }) => {
     await page.getByRole('button', { name: 'Add expense' }).click();

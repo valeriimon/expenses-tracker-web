@@ -1,0 +1,31 @@
+// The outlet takes what the update bar leaves, instead of filling the window
+// and sliding underneath it.
+ion-router-outlet {
+  position: relative;
+  flex: 1;
+}
+
+.update {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs) var(--space-md);
+  padding: calc(var(--space-sm) + env(safe-area-inset-top)) var(--gutter) var(--space-sm);
+  background: var(--ledger-surface);
+  border-bottom: 1px solid var(--ledger-rule);
+  color: var(--ledger-text);
+}
+
+.message {
+  flex: 1;
+}
+
+.update button {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.reload {
+  color: var(--ledger-accent);
+  font-weight: 600;
+}

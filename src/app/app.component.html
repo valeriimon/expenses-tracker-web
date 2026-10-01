@@ -1,3 +1,18 @@
 <ion-app>
+  <!-- In the page flow, above everything, rather than floating over it: the
+       offer stays until it is answered, and nothing underneath may be covered
+       for that long. -->
+  @if (updates.updateReady()) {
+    <div class="update" role="status">
+      <span class="t-body message">An update is ready</span>
+      <button type="button" class="plain t-body reload" (click)="updates.applyUpdate()">
+        Reload
+      </button>
+      <button type="button" class="plain t-body muted" (click)="updates.declineUpdate()">
+        Later
+      </button>
+    </div>
+  }
+
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

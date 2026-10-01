@@ -14,10 +14,16 @@
 
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" type="image/png" href="assets/icon/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/icon/apple-touch-icon.png" />
 
-  <!-- add to homescreen for ios -->
+  <!-- The window chrome takes the page background in each appearance. -->
+  <meta name="theme-color" content="#fcfcfa" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
+
+  <!-- Add to Home Screen on iOS, which does not read the manifest for these. -->
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Expenses" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 </head>
 
 <body>

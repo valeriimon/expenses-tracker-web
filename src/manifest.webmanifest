@@ -2,10 +2,20 @@
   "name": "Expenses",
   "short_name": "Expenses",
   "description": "A weekly expense ledger that keeps its data in this browser.",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#fcfcfa",
   "theme_color": "#fcfcfa",
-  "icons": [{ "src": "assets/icon/favicon.png", "sizes": "64x64", "type": "image/png" }]
+  "icons": [
+    { "src": "assets/icon/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    {
+      "src": "assets/icon/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }

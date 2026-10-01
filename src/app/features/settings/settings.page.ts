@@ -13,10 +13,18 @@ import { addIcons } from 'ionicons';
 import { chevronForward, close } from 'ionicons/icons';
 
 import { WEEKDAY_NAMES, type WeekStartDay } from '../../core/lib/dates';
+import { UpdateService, type OfflineState } from '../../core/state/update.service';
 import { WeekStore } from '../../core/state/week-store';
 import { ChoiceListComponent, type Choice } from '../../ui/choice-list.component';
 
 const WEEK_START_DAYS: WeekStartDay[] = [0, 1, 2, 3, 4, 5, 6];
+
+/** What the user is told about using the app with no network. */
+const OFFLINE_TEXT: Record<OfflineState, string> = {
+  saving: 'Being saved for offline use…',
+  ready: 'Available offline',
+  unsupported: 'Not available offline in this browser',
+};
 
 /**
  * Settings, presented over the tabs rather than as a destination of its own —
@@ -84,6 +92,10 @@ const WEEK_START_DAYS: WeekStartDay[] = [0, 1, 2, 3, 4, 5, 6];
             anywhere, and nothing is shared with other browsers or devices. Clearing this site's
             data in the browser deletes your expenses.
           </p>
+          <!-- A notice says so once, when saving finishes; this is where to
+               look afterwards. It updates in place if that happens while this
+               page is open. -->
+          <p class="t-body offline" role="status">{{ offlineText() }}</p>
         </section>
       </div>
     </ion-content>
@@ -98,6 +110,10 @@ const WEEK_START_DAYS: WeekStartDay[] = [0, 1, 2, 3, 4, 5, 6];
       margin-top: var(--space-sm);
     }
 
+    .offline {
+      margin-top: var(--space-sm);
+    }
+
     .later {
       margin-top: var(--space-xl);
     }
@@ -106,6 +122,9 @@ const WEEK_START_DAYS: WeekStartDay[] = [0, 1, 2, 3, 4, 5, 6];
 export class SettingsPage {
   private readonly nav = inject(NavController);
   private readonly weeks = inject(WeekStore);
+  private readonly updates = inject(UpdateService);
+
+  protected readonly offlineText = computed(() => OFFLINE_TEXT[this.updates.offline()]);
 
   protected readonly weekStartOptions = computed<Choice[]>(() =>
     WEEK_START_DAYS.map((day) => ({

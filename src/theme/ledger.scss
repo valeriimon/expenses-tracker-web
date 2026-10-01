@@ -308,3 +308,9 @@ ion-datetime {
   --background: var(--ledger-surface);
   --background-rgb: var(--ion-background-color-rgb);
 }
+
+/* A notice that only informs must not take a press meant for what is under
+   it, however briefly it is there. */
+ion-toast.passive::part(container) {
+  pointer-events: none;
+}
