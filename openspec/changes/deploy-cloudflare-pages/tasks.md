@@ -1,6 +1,6 @@
 ## 1. Prepare the repository
 
-- [x] 1.1 Add `.nvmrc` containing `24` and verify it matches the major version printed by `node -v`
+- [x] 1.1 Add `.nvmrc` containing `24.20.0` and verify it matches the version printed by `node -v`
 - [x] 1.2 Add `src/_headers` setting `Cache-Control: no-cache` for `/sw.js`, list it in the build assets in `angular.json`, and verify `npm run build` leaves `www/_headers` with that rule
 - [x] 1.3 Verify the build has no top-level `404.html` and that `www/sw.js` does not precache `_headers` (search the generated file)
 - [x] 1.4 Verify the build works from a clean install as Cloudflare will run it: `npm ci` then `npm run build` complete without errors

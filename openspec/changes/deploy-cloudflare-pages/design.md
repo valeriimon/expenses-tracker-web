@@ -45,7 +45,9 @@ No `wrangler.toml` is added. With Git integration the dashboard holds the settin
 
 ### Pin Node with `.nvmrc`
 
-A `.nvmrc` containing `24` makes Cloudflare's build image use the major version the project is developed on, and does the same for anyone using `nvm` locally. Without it the image's default Node is used, which changes over time and may be older than this Angular version supports.
+A `.nvmrc` containing the exact version the project is developed on, `24.20.0`, makes Cloudflare's build image use it, and does the same for anyone using `nvm` locally. Without it the image's default Node is used, which changes over time and may be older than this Angular version supports.
+
+The version is exact, not just the major. The first build used `24`, which Cloudflare's image resolved to 24.13.1; the Angular CLI requires at least 24.15.0 on that line and refused to run.
 
 Dependencies come from `package-lock.json`, which Cloudflare installs from, so the build uses the same package versions as local builds.
 
