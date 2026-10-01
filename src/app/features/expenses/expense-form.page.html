@@ -1,0 +1,101 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="primary" (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>{{ isEditing ? 'Edit expense' : 'New expense' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" class="save" [disabled]="saving() || !loaded()" (click)="save()">
+        Save
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form class="page form" (submit)="$event.preventDefault(); save()">
+    <div class="field">
+      <span class="t-caption muted" id="date-label">Date</span>
+      <button
+        type="button"
+        class="plain date t-body"
+        aria-labelledby="date-label date-value"
+        (click)="pickerOpen.set(true)"
+      >
+        <span id="date-value">{{ dateLabel() }}</span>
+      </button>
+    </div>
+
+    <div class="field">
+      <label class="t-caption muted" for="description">What was bought</label>
+      <ion-input
+        class="ledger-input"
+        [class.invalid]="errors().description !== undefined"
+        id="description"
+        aria-label="What was bought"
+        placeholder="Groceries, gym, water delivery"
+        enterkeyhint="next"
+        [value]="description()"
+        (ionInput)="description.set($event.detail.value ?? '')"
+      ></ion-input>
+      @if (errors().description; as message) {
+        <p class="t-caption danger" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <label class="t-caption muted" for="amount">Amount</label>
+      <ion-input
+        class="ledger-input"
+        [class.invalid]="errors().amount !== undefined"
+        id="amount"
+        aria-label="Amount"
+        placeholder="0"
+        inputmode="decimal"
+        [value]="amount()"
+        (ionInput)="amount.set($event.detail.value ?? '')"
+      ></ion-input>
+      @if (errors().amount; as message) {
+        <p class="t-caption danger" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <div class="field">
+      <span class="t-caption muted">Category</span>
+      <app-category-picker
+        [categories]="categories()"
+        [selectedId]="categoryId()"
+        (choose)="categoryId.set($event)"
+      />
+      @if (errors().category; as message) {
+        <p class="t-caption danger" role="alert">{{ message }}</p>
+      }
+    </div>
+
+    <!-- Lets Enter in a field save, as a form is expected to. -->
+    <button type="submit" hidden></button>
+
+    @if (isEditing) {
+      <ion-button class="action delete" fill="outline" color="danger" expand="block" (click)="confirmDelete()">
+        Delete expense
+      </ion-button>
+    }
+  </form>
+
+  <!-- The class is Ionic's own for a date picker in a dialog: it sizes the
+       dialog to the calendar rather than to the page. -->
+  <ion-modal
+    class="ion-datetime-button-overlay"
+    [isOpen]="pickerOpen()"
+    (didDismiss)="pickerOpen.set(false)"
+  >
+    <ng-template>
+      <ion-datetime
+        presentation="date"
+        [value]="date()"
+        [firstDayOfWeek]="weeks.weekStartsOn()"
+        (ionChange)="onDateChange($event.detail.value)"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
+</ion-content>

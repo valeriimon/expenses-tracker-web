@@ -1,0 +1,310 @@
+/**
+ * The ledger's type roles, rules, and the handful of shapes every page shares.
+ *
+ * Sizes are in `rem`, so text grows with the browser's font-size setting and
+ * with zoom. Pages must lay out for that rather than pin anything in pixels.
+ */
+
+/* 4px scale. Use these instead of raw numbers for padding, margin, and gap. */
+:root {
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  /* How far content sits from the edge of the page. */
+  --gutter: var(--space-lg);
+  /* The widest a column of entries is allowed to run on a large screen. */
+  --page-width: 40rem;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+}
+
+/* ---- Type roles -------------------------------------------------------- */
+
+/* `balance` is the ledger's closing figure and belongs to the week total
+   alone. A second element at that size would cost it the meaning it carries. */
+.t-balance {
+  font-size: 2.5rem;
+  line-height: 2.75rem;
+  font-weight: 600;
+}
+
+.t-title {
+  font-size: 1.75rem;
+  line-height: 2.125rem;
+  font-weight: 700;
+}
+
+.t-heading {
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+  font-weight: 600;
+}
+
+.t-body {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 400;
+}
+
+.t-caption {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+  font-weight: 400;
+}
+
+.t-strong {
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--ledger-muted);
+}
+
+.danger {
+  color: var(--ledger-danger);
+}
+
+/**
+ * How money is set, everywhere money is shown.
+ *
+ * A modifier rather than a size: it layers over whichever type role is active,
+ * so one definition serves the balance line and a caption-sized amount in the
+ * import preview without either restating it.
+ *
+ * `tabular-nums` is the whole point. Without uniform digit widths a column of
+ * amounts drifts line to line, because a `1` is narrower than an `8` in
+ * proportional figures. The right alignment is the other half: every figure in
+ * a list shares one right edge.
+ */
+.amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.t-balance.amount {
+  font-weight: 600;
+}
+
+/* ---- Page container ---------------------------------------------------- */
+
+ion-content {
+  --background: var(--ledger-background);
+  --color: var(--ledger-text);
+}
+
+/* Paints the gutter and keeps the column readable on a wide screen. */
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-md) var(--gutter) var(--space-xl);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.stack-sm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+p {
+  margin: 0;
+}
+
+/* The toolbar lines its title and buttons up with the page column. */
+ion-header ion-toolbar {
+  --border-width: 0;
+  --min-height: 3.5rem;
+  --padding-start: max(var(--space-sm), calc((100% - var(--page-width)) / 2));
+  --padding-end: max(var(--space-sm), calc((100% - var(--page-width)) / 2));
+}
+
+ion-header ion-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding-inline: var(--space-md);
+}
+
+/* ---- Controls ---------------------------------------------------------- */
+
+/* Native buttons used as rows, chips and icon controls start from nothing. */
+button.plain {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+button.plain:focus-visible,
+button.chip:focus-visible {
+  outline: 2px solid var(--ledger-accent);
+  outline-offset: 2px;
+}
+
+button.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 1.375rem;
+}
+
+ion-button {
+  --border-radius: var(--radius-md);
+  --box-shadow: none;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+ion-button.action {
+  --padding-start: var(--space-lg);
+  --padding-end: var(--space-lg);
+  --padding-top: var(--space-md);
+  --padding-bottom: var(--space-md);
+  min-height: 3rem;
+  margin: 0;
+}
+
+/* Outlined in the rule colour with ink for a label: a secondary action. */
+ion-button.action[fill='outline'] {
+  --border-color: var(--ledger-rule);
+  --border-width: 1px;
+  --color: var(--ledger-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+/* A text field on the raised surface, inside a hairline border. */
+ion-input.ledger-input {
+  --background: var(--ledger-surface);
+  --color: var(--ledger-text);
+  --placeholder-color: var(--ledger-muted);
+  --placeholder-opacity: 1;
+  --padding-start: var(--space-md);
+  --padding-end: var(--space-md);
+  --padding-top: var(--space-md);
+  --padding-bottom: var(--space-md);
+  --highlight-height: 0;
+  --border-width: 0;
+  min-height: 3.5rem;
+  border: 1px solid var(--ledger-rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: 1rem;
+}
+
+ion-input.ledger-input.has-focus {
+  border-color: var(--ledger-accent);
+}
+
+ion-input.ledger-input.invalid {
+  border-color: var(--ledger-danger);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* ---- Bordered lists and panels ---------------------------------------- */
+
+/* A list of rows inside one hairline border, peers separated by hairlines. */
+.list {
+  border: 1px solid var(--ledger-rule);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.list > .list-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--ledger-rule);
+}
+
+.list > .list-row:last-child {
+  border-bottom: 0;
+}
+
+.list > button.list-row:hover,
+.list > button.list-row:active {
+  background: var(--ledger-surface);
+}
+
+.list-row .grow {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border: 1px solid var(--ledger-rule);
+  border-radius: var(--radius-md);
+}
+
+.panel.panel-danger {
+  border-color: var(--ledger-danger);
+}
+
+/* ---- Overlays ---------------------------------------------------------- */
+
+ion-modal {
+  --background: var(--ledger-background);
+  --border-radius: var(--radius-md);
+}
+
+ion-alert {
+  --background: var(--ledger-background);
+}
+
+/* No drop shadow under the header: the week bar below already gives a page its
+   structure, and a second division so close to it reads as clutter. */
+ion-header.header-md,
+ion-header {
+  box-shadow: none;
+}
+
+ion-header::after {
+  display: none;
+}
+
+ion-datetime {
+  --background: var(--ledger-surface);
+  --background-rgb: var(--ion-background-color-rgb);
+}

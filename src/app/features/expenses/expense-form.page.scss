@@ -1,0 +1,25 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.date {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 3.5rem;
+  padding: var(--space-md);
+  background: var(--ledger-surface);
+  border: 1px solid var(--ledger-rule);
+  border-radius: var(--radius-md);
+}
+
+.save {
+  font-weight: 600;
+}
+
+.delete {
+  margin-top: var(--space-md);
+  --border-color: var(--ledger-rule);
+  --border-width: 1px;
+}

@@ -1,0 +1,18 @@
+schema: spec-driven
+
+context: |
+  A weekly expense ledger as a web app, ported from the React Native app in
+  ../expenses-tracker. The specs in openspec/specs were carried over from that
+  project and reworded for the browser.
+
+  Tech stack: Angular (standalone components, signals, zoneless), Ionic Angular
+  in `md` mode, Dexie over IndexedDB, Vitest for unit tests, Playwright for
+  end-to-end tests. No backend: all data stays in the browser.
+
+  Layout: src/app/core/lib is pure, unit-tested logic; src/app/core/db holds the
+  only code that writes to IndexedDB and restates every validation rule there;
+  src/app/features holds one folder per destination; src/app/ui holds shared
+  presentational components; src/theme holds the ledger design tokens.
+
+  Money is integer minor units (kopiykas). Dates are calendar days as
+  YYYY-MM-DD strings, never instants.

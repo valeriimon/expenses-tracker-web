@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Insights</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page">
+    <app-week-header
+      [weekStart]="weekStart()"
+      [weekEnd]="weekEnd()"
+      [weekStartsOn]="weeks.weekStartsOn()"
+      (previous)="goToPreviousWeek()"
+      (next)="goToNextWeek()"
+      (current)="goToCurrentWeek()"
+    />
+
+    <app-week-transition
+      [weekStart]="weekStart()"
+      (swipePrevious)="goToPreviousWeek()"
+      (swipeNext)="goToNextWeek()"
+    >
+      @if (empty()) {
+        <!-- Said plainly, rather than shown as a zero with nothing under it. -->
+        <div class="empty">
+          <p class="t-body muted">Nothing was recorded in this week.</p>
+          <p class="t-caption muted">Expenses you record for it will be summed up here.</p>
+        </div>
+      } @else if (loaded()) {
+        <div class="balance">
+          <p class="t-caption muted">Week total</p>
+          <p class="t-balance amount">{{ formatMinor(totalMinor()) }}</p>
+        </div>
+
+        <!-- The one closing rule on the page. Section headings below are set
+             in type, and breakdown rows are separated by their own measures. -->
+        <app-balance-rule />
+
+        @if (comparison(); as against) {
+          <section class="comparison">
+            <p class="t-body">{{ against.sentence }}</p>
+            <app-measure-rule [fraction]="against.fraction" [marker]="against.marker" />
+            <p class="t-caption muted">
+              A typical week is <span class="figure">{{ formatMinor(baselineMinor() ?? 0) }}</span>
+              — the middle of your recent weeks. The mark shows where it falls.
+            </p>
+          </section>
+        }
+
+        <section class="breakdown">
+          <h2 class="t-caption muted">By category</h2>
+
+          @for (row of breakdown(); track row.categoryId) {
+            <!-- The measure sits on its own line beneath the row rather than in
+                 a column inside it, which is what keeps a long category name
+                 and a long amount from competing with it for width. -->
+            <div class="category">
+              <div class="category-line">
+                <span class="category-name t-body">{{ row.categoryName }}</span>
+                <span class="t-body amount">{{ formatMinorBare(row.totalMinor) }}</span>
+              </div>
+              <app-measure-rule [fraction]="row.fraction" />
+            </div>
+          }
+        </section>
+      }
+    </app-week-transition>
+  </div>
+</ion-content>

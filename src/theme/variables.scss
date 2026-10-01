@@ -1,0 +1,155 @@
+/**
+ * Design tokens for the whole app. Pages read colour from these roles rather
+ * than hard-coding values, so the app stays visually consistent by default
+ * instead of by discipline.
+ *
+ * The direction is a ledger: ink on stock, ruled columns, and one heavier rule
+ * that closes a total. The character comes from the ink and the rules, not from
+ * tinting the paper.
+ *
+ * Contrast, measured (WCAG 2.1 relative luminance), not estimated:
+ *
+ *                     light            dark
+ *   text/background   17.29:1          15.57:1
+ *   text/surface      15.82:1          14.02:1
+ *   muted/background   6.63:1           6.99:1
+ *   muted/surface      6.07:1           6.29:1
+ *   accent/background  6.44:1           8.84:1
+ *   accent/surface     5.89:1           7.96:1
+ *   danger/background  8.02:1           7.11:1
+ *   danger/surface     7.34:1           6.40:1
+ *   on-accent fill     6.44:1           8.84:1
+ *
+ * Every pair clears 4.5:1.
+ *
+ * The accent is a vivid teal, in the family iron-gall ink oxidises toward. Red
+ * ledger ink would be the more authentic choice and was rejected because
+ * `danger` is already red: a save button sharing a hue with a delete button is
+ * a usability cost no amount of authenticity pays for.
+ *
+ * The visual-design spec caps the fill luminance of any large accent-filled
+ * control at 0.45, which is what keeps the add button from becoming the
+ * brightest object on a dark screen:
+ *
+ *   light accent #00695C   0.109   ok
+ *   dark accent  #14C8AE   0.445   ok
+ *
+ * The dark accent has no headroom left under that ceiling: tune it downward or
+ * not at all.
+ *
+ * The `--ledger-*` roles are what pages use. The `--ion-*` variables beneath
+ * them hand the same values to Ionic's own components, so a toolbar, an alert,
+ * or the date picker cannot drift away from the palette.
+ */
+
+@mixin ledger-light {
+  --ledger-background: #fcfcfa;
+  --ledger-surface: #f2f2ee;
+  --ledger-text: #16181d;
+  --ledger-muted: #565b66;
+  --ledger-rule: #dcdcd5;
+  --ledger-rule-strong: #a8a89f;
+  --ledger-accent: #00695c;
+  --ledger-danger: #8c2f26;
+
+  --ion-background-color: #fcfcfa;
+  --ion-background-color-rgb: 252, 252, 250;
+  --ion-text-color: #16181d;
+  --ion-text-color-rgb: 22, 24, 29;
+
+  --ion-color-primary: #00695c;
+  --ion-color-primary-rgb: 0, 105, 92;
+  --ion-color-primary-contrast: #fcfcfa;
+  --ion-color-primary-contrast-rgb: 252, 252, 250;
+  --ion-color-primary-shade: #005c51;
+  --ion-color-primary-tint: #1a786c;
+
+  --ion-color-danger: #8c2f26;
+  --ion-color-danger-rgb: 140, 47, 38;
+  --ion-color-danger-contrast: #fcfcfa;
+  --ion-color-danger-contrast-rgb: 252, 252, 250;
+  --ion-color-danger-shade: #7b2921;
+  --ion-color-danger-tint: #98443c;
+
+  --ion-color-medium: #565b66;
+  --ion-color-medium-rgb: 86, 91, 102;
+  --ion-color-medium-contrast: #fcfcfa;
+  --ion-color-medium-contrast-rgb: 252, 252, 250;
+  --ion-color-medium-shade: #4c505a;
+  --ion-color-medium-tint: #676b75;
+}
+
+@mixin ledger-dark {
+  --ledger-background: #101216;
+  --ledger-surface: #1a1d23;
+  --ledger-text: #eceae3;
+  --ledger-muted: #9a9ea8;
+  --ledger-rule: #2a2e36;
+  --ledger-rule-strong: #4a4f59;
+  --ledger-accent: #14c8ae;
+  --ledger-danger: #e8837a;
+
+  --ion-background-color: #101216;
+  --ion-background-color-rgb: 16, 18, 22;
+  --ion-text-color: #eceae3;
+  --ion-text-color-rgb: 236, 234, 227;
+
+  --ion-color-primary: #14c8ae;
+  --ion-color-primary-rgb: 20, 200, 174;
+  --ion-color-primary-contrast: #101216;
+  --ion-color-primary-contrast-rgb: 16, 18, 22;
+  --ion-color-primary-shade: #12b099;
+  --ion-color-primary-tint: #2cceb6;
+
+  --ion-color-danger: #e8837a;
+  --ion-color-danger-rgb: 232, 131, 122;
+  --ion-color-danger-contrast: #101216;
+  --ion-color-danger-contrast-rgb: 16, 18, 22;
+  --ion-color-danger-shade: #cc736b;
+  --ion-color-danger-tint: #ea8f87;
+
+  --ion-color-medium: #9a9ea8;
+  --ion-color-medium-rgb: 154, 158, 168;
+  --ion-color-medium-contrast: #101216;
+  --ion-color-medium-contrast-rgb: 16, 18, 22;
+  --ion-color-medium-shade: #888b94;
+  --ion-color-medium-tint: #a4a8b1;
+}
+
+/* Roles that are the same expression in both appearances. */
+@mixin ledger-shared {
+  --ledger-on-accent: var(--ledger-background);
+
+  --ion-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+
+  --ion-toolbar-background: var(--ledger-background);
+  --ion-toolbar-color: var(--ledger-text);
+  --ion-item-background: var(--ledger-background);
+  --ion-border-color: var(--ledger-rule);
+  --ion-overlay-background-color: var(--ledger-background);
+  --ion-placeholder-color: var(--ledger-muted);
+
+  /* Measured against the tab bar's own surface, not the page: active 5.89:1
+     light / 7.96:1 dark, inactive 6.07:1 / 6.29:1. */
+  --ion-tab-bar-background: var(--ledger-surface);
+  --ion-tab-bar-border-color: var(--ledger-rule);
+  --ion-tab-bar-color: var(--ledger-muted);
+  --ion-tab-bar-color-selected: var(--ledger-accent);
+}
+
+/* The selectors repeat Ionic's own (`:root.md`, `:root.ios`) so these values
+   win over its bundled dark palette on specificity as well as on order. */
+:root,
+:root.md,
+:root.ios {
+  @include ledger-light;
+  @include ledger-shared;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root,
+  :root.md,
+  :root.ios {
+    @include ledger-dark;
+  }
+}

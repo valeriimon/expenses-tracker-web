@@ -1,0 +1,33 @@
+.add-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+
+  ion-input {
+    flex: 1;
+  }
+}
+
+.add {
+  margin: 0;
+  min-width: 3.5rem;
+  min-height: 3.5rem;
+  font-size: 1.375rem;
+}
+
+.categories {
+  margin-top: var(--space-lg);
+}
+
+// The row above the divider keeps its own hairline off, so the heavier break
+// is one division rather than two stacked.
+.group-divider {
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ledger-rule-strong);
+}
+
+.accent {
+  color: var(--ledger-accent);
+}

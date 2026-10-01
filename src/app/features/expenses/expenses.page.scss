@@ -1,0 +1,75 @@
+.page {
+  // Clears the add button so the last row is never hidden behind it.
+  padding-bottom: 6.5rem;
+}
+
+.balance {
+  margin-top: var(--space-md);
+  padding-bottom: var(--space-sm);
+  // Lines the figure up with the amount column the rows below it form.
+  padding-inline: var(--space-xs);
+  text-align: right;
+}
+
+.day {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--space-xs) var(--space-xs);
+  border-bottom: 1px solid var(--ledger-rule);
+  // Breathing room under the rule, so the first entry sits below the line
+  // rather than against it.
+  margin-bottom: var(--space-xs);
+}
+
+.day-title {
+  // Takes the slack so the total keeps the column's right edge however long
+  // the date label runs.
+  flex: 1;
+  margin: 0;
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-sm);
+
+  &:hover,
+  &:active {
+    background: var(--ledger-surface);
+  }
+}
+
+.details {
+  // Takes the slack so a long description wraps instead of pushing the amount
+  // off the edge at large text sizes.
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xl) 0;
+  text-align: center;
+}
+
+ion-fab {
+  // Puts the button's edge on the same line as the amount column above it,
+  // including on a wide screen where the column is centred.
+  inset-inline-end: max(
+    calc(var(--gutter) + var(--space-xs)),
+    calc((100% - var(--page-width)) / 2 + var(--gutter) + var(--space-xs))
+  );
+  bottom: var(--gutter);
+}

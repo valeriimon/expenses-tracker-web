@@ -1,0 +1,44 @@
+{
+  "name": "expenses-tracker-web",
+  "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false",
+    "lint": "ng lint",
+    "e2e": "playwright test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "22.1.7",
+    "@angular/compiler": "22.1.7",
+    "@angular/core": "22.1.7",
+    "@angular/forms": "22.1.7",
+    "@angular/platform-browser": "22.1.7",
+    "@angular/router": "22.1.7",
+    "@angular/service-worker": "^22.1.7",
+    "@ionic/angular": "^9.0.0",
+    "dexie": "^4.4.6",
+    "ionicons": "^8.1.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "22.1.8",
+    "@angular/cli": "22.1.8",
+    "@angular/compiler-cli": "22.1.7",
+    "@angular/language-service": "22.1.7",
+    "@ionic/angular-toolkit": "^13.0.0",
+    "@playwright/test": "^1.63.0",
+    "angular-eslint": "22.0.0",
+    "eslint": "^10.10.0",
+    "fake-indexeddb": "^6.2.5",
+    "jsdom": "^26.0.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "~4.0.18"
+  },
+  "description": "Weekly expense ledger (web)"
+}

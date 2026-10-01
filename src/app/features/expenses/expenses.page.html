@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Expenses</ion-title>
+    <ion-buttons slot="end">
+      <ion-button aria-label="Settings" (click)="openSettings()">
+        <ion-icon slot="icon-only" name="settings-outline" aria-hidden="true"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page">
+    <app-week-header
+      [weekStart]="weekStart()"
+      [weekEnd]="weekEnd()"
+      [weekStartsOn]="weeks.weekStartsOn()"
+      (previous)="goToPreviousWeek()"
+      (next)="goToNextWeek()"
+      (current)="goToCurrentWeek()"
+    />
+
+    <app-week-transition
+      [weekStart]="weekStart()"
+      (swipePrevious)="goToPreviousWeek()"
+      (swipeNext)="goToNextWeek()"
+    >
+      <!-- The label sits above the figure rather than beside it. At a large
+           text size a balance-sized figure and its label on one row collide;
+           stacked, they simply take more height. -->
+      <div class="balance">
+        <p class="t-caption muted">Week total</p>
+        <p class="t-balance amount">{{ formatMinor(totalMinor()) }}</p>
+      </div>
+
+      <app-balance-rule />
+
+      @for (section of sections(); track section.date) {
+        <section>
+          <!-- The hairline beneath the heading is the column rule of a ledger
+               page: it ties the day's total to the entries that make it up. -->
+          <header class="day">
+            <h2 class="day-title t-body t-strong">{{ section.title }}</h2>
+            <span class="t-body amount muted">{{ formatMinor(section.totalMinor) }}</span>
+          </header>
+
+          @for (expense of section.expenses; track expense.id) {
+            <button
+              type="button"
+              class="plain entry"
+              [attr.aria-label]="'Edit ' + expense.description + ', ' + formatMinor(expense.amountMinor)"
+              (click)="openExpense(expense.id)"
+            >
+              <span class="details">
+                <span class="t-body">{{ expense.description }}</span>
+                <span class="t-caption muted">{{ expense.categoryName }}</span>
+              </span>
+              <span class="t-body amount">{{ formatMinorBare(expense.amountMinor) }}</span>
+            </button>
+          }
+        </section>
+      } @empty {
+        <!-- Must not flash before the week on screen has been read. -->
+        @if (loaded()) {
+          <div class="empty">
+            <p class="t-body muted">Nothing recorded this week.</p>
+            <p class="t-caption muted">Use + to add an expense.</p>
+          </div>
+        }
+      }
+    </app-week-transition>
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button aria-label="Add expense" (click)="addExpense()">
+      <ion-icon name="add" aria-hidden="true"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

@@ -1,0 +1,267 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Import</ion-title>
+    <ion-buttons slot="end">
+      <ion-button aria-label="Close import" [disabled]="busy()" (click)="close()">
+        <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page stack">
+    @if (fileName() !== null && step() !== 'result') {
+      <p class="t-caption muted">{{ fileName() }}</p>
+    }
+
+    @switch (step()) {
+      @case ('file') {
+        <h2 class="t-heading">Import from a CSV file</h2>
+        <p class="t-caption muted">
+          Choose a file and you will be asked which of its columns holds what. Nothing is imported
+          until you confirm.
+        </p>
+
+        @if (message(); as text) {
+          <p class="t-caption danger" role="alert">{{ text }}</p>
+        }
+
+        <!-- The browser's own file chooser, behind a button that looks like the
+             rest of the app. -->
+        <input
+          #fileInput
+          type="file"
+          accept=".csv,text/csv,text/plain"
+          hidden
+          (change)="onFileChosen($event)"
+        />
+
+        <div class="actions">
+          <ion-button class="action" fill="outline" [disabled]="busy()" (click)="close()">
+            Cancel
+          </ion-button>
+          <ion-button class="action" [disabled]="busy()" (click)="fileInput.click()">
+            {{ busy() ? 'Reading…' : 'Choose file' }}
+          </ion-button>
+        </div>
+      }
+
+      @case ('mapping') {
+        <h2 class="t-heading">Match your columns</h2>
+        <p class="t-caption muted">Choose which column of your file holds each of these.</p>
+
+        @for (item of mappingFields(); track item.field) {
+          <div class="field">
+            <span class="t-caption muted">{{ item.label }}</span>
+            <app-choice-list
+              [label]="item.label"
+              [options]="item.options"
+              (choose)="mapField(item.field, $event)"
+            />
+          </div>
+        }
+
+        @if (missingFields() !== '') {
+          <p class="t-caption muted">Still to choose: {{ missingFields() }}.</p>
+        }
+
+        <div class="actions">
+          <ion-button class="action" fill="outline" (click)="chooseAnotherFile()">Back</ion-button>
+          <ion-button
+            class="action"
+            [disabled]="missingFields() !== ''"
+            (click)="step.set('dateFormat')"
+          >
+            Continue
+          </ion-button>
+        </div>
+      }
+
+      @case ('dateFormat') {
+        <h2 class="t-heading">How are the dates written?</h2>
+        <p class="t-caption muted">
+          @if (dateSamples().length === 0) {
+            Choose the format your date column uses.
+          } @else {
+            Your file has dates like {{ dateSamples().join(', ') }}.
+          }
+        </p>
+
+        <app-choice-list
+          label="Date format"
+          [options]="dateFormatOptions()"
+          (choose)="chooseDateFormat($event)"
+        />
+
+        @if (needsYear()) {
+          <div class="stack-sm">
+            <p class="t-caption muted">
+              This format has no year. Every imported expense will be dated in:
+            </p>
+            <div class="stepper">
+              <button
+                type="button"
+                class="plain icon-button"
+                aria-label="Previous year"
+                (click)="year.set(year() - 1)"
+              >
+                <ion-icon name="chevron-back" aria-hidden="true"></ion-icon>
+              </button>
+              <span class="t-heading" aria-live="polite">{{ year() }}</span>
+              <button
+                type="button"
+                class="plain icon-button"
+                aria-label="Next year"
+                (click)="year.set(year() + 1)"
+              >
+                <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+              </button>
+            </div>
+          </div>
+        }
+
+        <div class="actions">
+          <ion-button class="action" fill="outline" (click)="step.set('mapping')">Back</ion-button>
+          <ion-button class="action" (click)="step.set('preview')">Preview</ion-button>
+        </div>
+      }
+
+      @case ('preview') {
+        @if (plan().errors.length > 0) {
+          <!-- An import is all or nothing, so there is no half of this file to
+               accept: the failures are shown instead of a summary, all at once,
+               and nothing here confirms. -->
+          <h2 class="t-heading">This file cannot be imported yet</h2>
+          <p class="t-caption muted">
+            {{ plan().errors.length }} {{ plan().errors.length === 1 ? 'row' : 'rows' }} could not
+            be read. Nothing has been imported. Fix these lines and try again.
+          </p>
+
+          <div class="panel panel-danger">
+            @for (error of plan().errors; track error.lineNumber) {
+              <p class="t-caption">
+                <span class="danger">Line {{ error.lineNumber }}</span>
+                {{ errorText[error.reason] }}
+                @if (error.value !== '') {
+                  ({{ error.value }})
+                }
+              </p>
+            }
+          </div>
+
+          <div class="actions">
+            <ion-button class="action" fill="outline" (click)="step.set('dateFormat')">
+              Back
+            </ion-button>
+            <ion-button class="action" fill="outline" (click)="close()">Cancel import</ion-button>
+          </div>
+        } @else {
+          <h2 class="t-heading">Ready to import</h2>
+          <p class="t-caption muted">Nothing has been written yet. Check that these look right.</p>
+
+          <div class="panel">
+            <p class="t-body">
+              {{ plan().rows.length }} {{ plan().rows.length === 1 ? 'expense' : 'expenses' }} to
+              import
+            </p>
+            @if (plan().duplicates > 0) {
+              <p class="t-caption muted">
+                {{ plan().duplicates }} {{ plan().duplicates === 1 ? 'row' : 'rows' }} already
+                recorded, which will be skipped
+              </p>
+            }
+            @if (plan().newCategoryNames.length > 0) {
+              <p class="t-caption muted">
+                {{ plan().newCategoryNames.length }} new
+                {{ plan().newCategoryNames.length === 1 ? 'category' : 'categories' }}:
+                {{ plan().newCategoryNames.join(', ') }}
+              </p>
+            }
+          </div>
+
+          <div>
+            @for (row of sample(); track row.lineNumber) {
+              <div class="sample-row">
+                <div class="sample-text">
+                  <span class="t-body">{{ row.description }}</span>
+                  <span class="t-caption muted">
+                    {{ formatFullDate(row.occurredOn) }} ·
+                    {{ row.categoryName ?? fallbackCategoryName() }}
+                  </span>
+                </div>
+                <span class="t-body amount">{{ formatMinorBare(row.amountMinor) }}</span>
+              </div>
+            }
+          </div>
+
+          @if (plan().rows.length > sample().length) {
+            <p class="t-caption muted">and {{ plan().rows.length - sample().length }} more</p>
+          }
+
+          <div class="actions">
+            <ion-button
+              class="action"
+              fill="outline"
+              [disabled]="busy()"
+              (click)="step.set('dateFormat')"
+            >
+              Back
+            </ion-button>
+            <ion-button
+              class="action"
+              [disabled]="busy() || plan().rows.length === 0"
+              (click)="confirm()"
+            >
+              {{ busy() ? 'Importing…' : 'Import' }}
+            </ion-button>
+          </div>
+        }
+      }
+
+      @case ('result') {
+        @if (result(); as outcome) {
+          <!-- Duplicates are reported rather than passed over silently: a second
+               import of the same file writing nothing is correct, but a page
+               that said only "0 imported" would read as a failure. -->
+          <h2 class="t-heading">
+            {{ outcome.imported === 0 ? 'Nothing new to import' : 'Import complete' }}
+          </h2>
+          <p class="t-caption muted">
+            {{
+              outcome.imported === 0
+                ? 'Every row in this file was already recorded.'
+                : 'Your expenses are in the log, under the dates the file gave them.'
+            }}
+          </p>
+
+          <div class="panel">
+            <p class="t-body">
+              {{ outcome.imported }} {{ outcome.imported === 1 ? 'expense' : 'expenses' }} imported
+            </p>
+            @if (outcome.skippedDuplicates > 0) {
+              <p class="t-caption muted">
+                {{ outcome.skippedDuplicates }}
+                {{ outcome.skippedDuplicates === 1 ? 'row' : 'rows' }} skipped as already recorded
+              </p>
+            }
+            @if (outcome.createdCategories.length > 0) {
+              <p class="t-caption muted">
+                {{ outcome.createdCategories.length }} new
+                {{ outcome.createdCategories.length === 1 ? 'category' : 'categories' }} created:
+                {{ outcome.createdCategories.join(', ') }}
+              </p>
+            }
+          </div>
+
+          <div class="actions">
+            <ion-button class="action" fill="outline" (click)="close()">Done</ion-button>
+            @if (outcome.imported > 0) {
+              <ion-button class="action" (click)="viewExpenses()">View expenses</ion-button>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+</ion-content>

@@ -1,0 +1,55 @@
+.balance {
+  margin-top: var(--space-md);
+  padding-bottom: var(--space-sm);
+  // Lines the figure up with the amount column the breakdown forms below it.
+  padding-inline: var(--space-xs);
+  text-align: right;
+}
+
+.comparison {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg) var(--space-xs) 0;
+}
+
+.figure {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.breakdown {
+  padding: var(--space-lg) var(--space-xs) 0;
+
+  h2 {
+    margin: 0 0 var(--space-sm);
+  }
+}
+
+.category {
+  padding: var(--space-sm) 0;
+}
+
+.category-line {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+}
+
+.category-name {
+  // Takes the slack so a long name wraps instead of pushing the amount off its
+  // right edge.
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xl) 0;
+  text-align: center;
+}

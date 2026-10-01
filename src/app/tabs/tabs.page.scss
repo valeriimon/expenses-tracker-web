@@ -1,0 +1,15 @@
+ion-tab-bar {
+  // Grows with the text instead of clipping it when the font size is enlarged.
+  height: auto;
+  min-height: 3.5rem;
+}
+
+ion-tab-button {
+  // Labels may wrap rather than be cut off at an enlarged text size.
+  max-width: none;
+  font-size: 0.8125rem;
+}
+
+ion-label {
+  white-space: normal;
+}

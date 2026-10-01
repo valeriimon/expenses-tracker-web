@@ -1,0 +1,140 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button aria-label="Back to settings" (click)="back()">
+        <ion-icon slot="icon-only" name="chevron-back" aria-hidden="true"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="page">
+    <form class="stack-sm" (submit)="$event.preventDefault(); createCategory()">
+      <p class="t-caption muted">
+        Add categories of your own. The built-in ones cannot be changed.
+      </p>
+
+      <div class="add-row">
+        <ion-input
+          class="ledger-input"
+          [class.invalid]="newNameError() !== null"
+          aria-label="New category name"
+          placeholder="New category"
+          enterkeyhint="done"
+          [value]="newName()"
+          (ionInput)="onNewNameInput($event.detail.value ?? '')"
+        ></ion-input>
+        <ion-button type="submit" class="add" aria-label="Add category">
+          <ion-icon slot="icon-only" name="add" aria-hidden="true"></ion-icon>
+        </ion-button>
+      </div>
+
+      @if (newNameError(); as message) {
+        <p class="t-caption danger" role="alert">{{ message }}</p>
+      }
+    </form>
+
+    <div class="list categories">
+      @for (category of ordered(); track category.id; let index = $index) {
+        @if (renamingId() === category.id) {
+          <form class="list-row" (submit)="$event.preventDefault(); saveRename()">
+            <div class="grow stack-sm">
+              <ion-input
+                class="ledger-input"
+                [class.invalid]="renameError() !== null"
+                [attr.aria-label]="'Rename ' + category.name"
+                enterkeyhint="done"
+                [autofocus]="true"
+                [value]="renameValue()"
+                (ionInput)="onRenameInput($event.detail.value ?? '')"
+              ></ion-input>
+              @if (renameError(); as message) {
+                <p class="t-caption danger" role="alert">{{ message }}</p>
+              }
+            </div>
+
+            <button type="submit" class="plain icon-button accent" aria-label="Save name">
+              <ion-icon name="checkmark" aria-hidden="true"></ion-icon>
+            </button>
+            <button
+              type="button"
+              class="plain icon-button muted"
+              aria-label="Cancel rename"
+              (click)="cancelRename()"
+            >
+              <ion-icon name="close" aria-hidden="true"></ion-icon>
+            </button>
+          </form>
+        } @else {
+          <div class="list-row">
+            <span class="grow t-body">{{ category.name }}</span>
+
+            @if (category.isBuiltin) {
+              <span class="t-caption muted">Built-in</span>
+            } @else {
+              <button
+                type="button"
+                class="plain icon-button"
+                [attr.aria-label]="'Rename ' + category.name"
+                (click)="startRename(category)"
+              >
+                <ion-icon name="pencil" aria-hidden="true"></ion-icon>
+              </button>
+              <button
+                type="button"
+                class="plain icon-button danger"
+                [attr.aria-label]="'Delete ' + category.name"
+                (click)="confirmDelete(category)"
+              >
+                <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+              </button>
+            }
+          </div>
+        }
+
+        <!-- Heavier than the hairline between rows: this break separates the
+             categories the user owns from the ones they cannot touch. -->
+        @if (index + 1 === dividerAfter()) {
+          <div class="group-divider" aria-hidden="true"></div>
+        }
+      }
+    </div>
+  </div>
+
+  <ion-modal [isOpen]="deleteTarget() !== null" (didDismiss)="deleteTarget.set(null)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Move expenses</ion-title>
+          <ion-buttons slot="end">
+            <ion-button aria-label="Cancel deletion" (click)="deleteTarget.set(null)">
+              <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content>
+        <div class="page stack">
+          <p class="t-caption muted">{{ deleteExplanation() }}</p>
+
+          <div class="list">
+            @for (candidate of replacements(); track candidate.id) {
+              <button
+                type="button"
+                class="plain list-row"
+                [attr.aria-label]="'Move to ' + candidate.name + ' and delete ' + deleteTarget()?.category?.name"
+                (click)="reassignAndDelete(candidate.id)"
+              >
+                <span class="grow t-body">{{ candidate.name }}</span>
+                <ion-icon name="chevron-forward" class="muted" aria-hidden="true"></ion-icon>
+              </button>
+            }
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
